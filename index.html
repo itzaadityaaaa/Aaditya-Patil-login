@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sign in | Aaditya Patil</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+/* ---------- Flat design tokens: solid colours only, no shadows, no gradients ---------- */
+:root{
+  --bg:#2EC4B6;      /* teal */
+  --ink:#1E2243;     /* deep indigo */
+  --paper:#FAFAF7;
+  --field:#E9EDF3;
+  --sun:#FFD23F;
+  --coral:#FF6B6B;
+  --violet:#7C6CF0;
+  --muted:#565C80;
+}
+*{box-sizing:border-box;margin:0;box-shadow:none;text-shadow:none}
+html{background:var(--bg)}
+body{
+  min-height:100svh;background:var(--bg);color:var(--ink);
+  font-family:"Outfit",system-ui,-apple-system,"Segoe UI",sans-serif;
+  display:grid;place-items:center;padding:130px 16px 70px;overflow-x:hidden;
+}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+
+/* ---------- Background shapes ---------- */
+.shapes{position:fixed;inset:0;overflow:hidden;pointer-events:none}
+.shape{position:absolute}
+.s-sun{width:clamp(120px,22vw,260px);aspect-ratio:1;border-radius:50%;background:var(--sun);left:-4vw;top:14vh;animation:bob 7s ease-in-out infinite}
+.s-sq{width:clamp(80px,13vw,160px);aspect-ratio:1;background:var(--coral);right:9vw;top:9vh;animation:spin 20s linear infinite}
+.s-ring{width:clamp(110px,16vw,190px);aspect-ratio:1;border:22px solid var(--violet);border-radius:50%;right:-3vw;bottom:12vh;animation:bob 9s ease-in-out -3s infinite}
+.s-tri{border-left:60px solid transparent;border-right:60px solid transparent;border-bottom:104px solid var(--ink);left:11vw;bottom:7vh;animation:drift 11s ease-in-out infinite}
+.s-half{width:180px;height:90px;background:var(--violet);border-radius:180px 180px 0 0;left:42vw;bottom:0;animation:bob 8s ease-in-out -2s infinite}
+.s-dot{border-radius:50%}
+.s-d1{width:26px;height:26px;background:var(--sun);left:30vw;top:18vh;animation:bob 5s ease-in-out infinite}
+.s-d2{width:18px;height:18px;background:var(--coral);right:26vw;bottom:22vh;animation:bob 6s ease-in-out -1s infinite}
+.s-d3{width:34px;height:34px;background:var(--ink);right:20vw;top:30vh;animation:bob 7s ease-in-out -4s infinite}
+.s-plus{width:64px;height:64px;left:20vw;top:62vh;animation:spin 14s linear infinite reverse}
+.s-plus::before,.s-plus::after{content:"";position:absolute;background:var(--paper)}
+.s-plus::before{left:0;right:0;top:25px;height:14px}
+.s-plus::after{top:0;bottom:0;left:25px;width:14px}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-26px)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes drift{0%,100%{transform:translate(0,0) rotate(0)}50%{transform:translate(34px,-22px) rotate(14deg)}}
+
+/* ---------- Brand + footer ---------- */
+.brand{position:fixed;top:22px;left:24px;display:flex;align-items:center;gap:12px;font-weight:800;font-size:1.25rem;letter-spacing:-.01em;z-index:2}
+.brand i{width:28px;height:28px;background:var(--ink);display:block;animation:spin 8s steps(4) infinite}
+.foot{position:fixed;bottom:16px;left:0;right:0;text-align:center;font-weight:600;font-size:.9rem;z-index:2}
+
+/* ---------- Stage ---------- */
+.stage{position:relative;width:min(420px,100%);z-index:1}
+.sr{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+
+/* ---------- Character peeking over the window ---------- */
+.pal{position:absolute;left:50%;top:-96px;width:124px;height:150px;margin-left:-62px;z-index:0;animation:peek .7s cubic-bezier(.3,1.6,.5,1) .8s backwards}
+.head{position:absolute;inset:0;animation:headbob 3s ease-in-out infinite}
+.stem{position:absolute;left:58px;top:6px;width:8px;height:22px;background:var(--ink);transform-origin:50% 100%;animation:sway 2.4s ease-in-out infinite}
+.ball{position:absolute;left:-3px;top:-10px;width:14px;height:14px;border-radius:50%;background:var(--coral)}
+.face{position:absolute;left:0;top:26px;width:124px;height:124px;border-radius:50%;background:var(--sun)}
+.eye{position:absolute;top:22px;width:34px;height:34px;border-radius:50%;background:#fff;overflow:hidden}
+.eye.l{left:24px}.eye.r{left:66px}
+.pupil{position:absolute;left:11px;top:11px;width:13px;height:13px;border-radius:50%;background:var(--ink);animation:look 5s ease-in-out infinite}
+.lid{position:absolute;inset:-2px;background:var(--sun);border-bottom:4px solid var(--ink);transform:translateY(-105%);transition:transform .25s cubic-bezier(.7,0,.3,1)}
+.stage:has(#pass:focus) .lid{transform:translateY(0)}
+@keyframes peek{from{transform:translateY(110px)}}
+@keyframes headbob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes sway{0%,100%{transform:rotate(-9deg)}50%{transform:rotate(9deg)}}
+@keyframes look{0%,100%{transform:translate(-4px,1px)}35%{transform:translate(5px,1px)}60%{transform:translate(1px,5px)}80%{transform:translate(-2px,-2px)}}
+@keyframes jump{0%,100%{transform:translateY(0)}40%{transform:translateY(-46px)}}
+.stage:has(#welcome:target) .pal{animation:jump .6s cubic-bezier(.3,.8,.4,1)}
+
+/* ---------- Window ---------- */
+.window{position:relative;z-index:1;background:var(--paper);border-radius:18px;overflow:hidden;animation:drop .9s cubic-bezier(.3,1.35,.5,1) backwards}
+@keyframes drop{from{transform:translateY(-95vh) rotate(-7deg)}}
+.bar{display:flex;align-items:center;gap:8px;padding:0 16px;height:42px;background:var(--ink);color:var(--paper);font-weight:600;font-size:.85rem}
+.bar b{width:13px;height:13px;border-radius:50%;display:block;transition:transform .2s}
+.bar b:nth-child(1){background:var(--coral)}
+.bar b:nth-child(2){background:var(--sun)}
+.bar b:nth-child(3){background:var(--bg)}
+.bar:hover b{transform:scale(1.35)}
+.bar span{margin-left:auto;margin-right:auto;transform:translateX(-24px)}
+.body{padding:28px 28px 30px}
+
+h1{font-size:2rem;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.sub{margin:6px 0 22px;color:var(--muted);font-size:1rem}
+.only-signup{display:none}
+.stage:has(#t-signup:checked) .only-signup{display:inline}
+.stage:has(#t-signup:checked) .only-login{display:none}
+
+/* ---------- Tabs ---------- */
+.tabs{position:relative;display:grid;grid-template-columns:1fr 1fr;background:var(--field);border-radius:12px;margin-bottom:20px}
+.tabs::after{content:"";position:absolute;left:4px;top:4px;bottom:4px;width:calc(50% - 4px);background:var(--sun);border-radius:9px;transition:transform .4s cubic-bezier(.7,0,.2,1.25)}
+.stage:has(#t-signup:checked) .tabs::after{transform:translateX(100%)}
+.tabs label{position:relative;z-index:1;text-align:center;padding:12px 0;font-weight:800;cursor:pointer}
+.stage:has(#t-login:focus-visible) label[for="t-login"],
+.stage:has(#t-signup:focus-visible) label[for="t-signup"]{outline:3px solid var(--ink);outline-offset:-3px;border-radius:9px}
+
+/* ---------- Fields ---------- */
+.extra{display:grid;grid-template-rows:0fr;transition:grid-template-rows .4s cubic-bezier(.7,0,.2,1)}
+.extra-in{min-height:0;overflow:hidden;visibility:hidden;transition:visibility .4s}
+.stage:has(#t-signup:checked) .extra{grid-template-rows:1fr}
+.stage:has(#t-signup:checked) .extra-in{visibility:visible}
+.field{position:relative;margin-bottom:14px;border-radius:12px;overflow:hidden;background:var(--field)}
+.field input{display:block;width:100%;height:58px;border:0;outline:0;background:transparent;color:var(--ink);font:inherit;font-weight:600;padding:25px 48px 6px 16px}
+.field label{position:absolute;left:16px;top:17px;color:var(--muted);transform-origin:left top;transition:transform .2s cubic-bezier(.3,1.4,.5,1);pointer-events:none}
+.field input:focus + label,
+.field input:not(:placeholder-shown) + label{transform:translateY(-11px) scale(.76);font-weight:800}
+.field::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;background:var(--coral);transform:scaleX(0);transform-origin:left;transition:transform .35s cubic-bezier(.7,0,.2,1)}
+.field:focus-within::after{transform:scaleX(1)}
+.field::before{content:"\2713";position:absolute;right:14px;top:17px;width:24px;height:24px;border-radius:50%;background:var(--bg);color:var(--ink);font-weight:800;font-size:.8rem;display:grid;place-items:center;transform:scale(0);transition:transform .3s cubic-bezier(.3,1.9,.5,1)}
+.field:has(input:valid:not(:placeholder-shown))::before{transform:scale(1)}
+
+/* ---------- Options ---------- */
+.opts{display:flex;justify-content:space-between;align-items:center;margin:4px 0 20px;font-weight:600;font-size:.95rem}
+.keep{display:flex;align-items:center;gap:10px;cursor:pointer}
+.keep input{appearance:none;-webkit-appearance:none;width:24px;height:24px;border:3px solid var(--ink);border-radius:7px;display:grid;place-items:center;cursor:pointer;margin:0}
+.keep input::after{content:"\2713";font-size:.8rem;font-weight:800;color:var(--paper);transform:scale(0)}
+.keep input:checked{background:var(--ink)}
+.keep input:checked::after{animation:pop .3s cubic-bezier(.3,1.9,.5,1) forwards}
+@keyframes pop{to{transform:scale(1)}}
+.opts a{text-decoration:none;border-bottom:3px solid var(--sun);transition:background .2s}
+.opts a:hover{background:var(--sun)}
+
+/* ---------- Button ---------- */
+.btn{position:relative;isolation:isolate;overflow:hidden;display:block;text-align:center;text-decoration:none;background:var(--ink);color:var(--paper);padding:17px;border-radius:12px;font-weight:800;font-size:1.05rem;transition:color .3s,transform .1s}
+.btn::before{content:"";position:absolute;inset:0;background:var(--sun);transform:translateX(-101%);transition:transform .4s cubic-bezier(.7,0,.2,1);z-index:-1}
+.btn:hover{color:var(--ink)}
+.btn:hover::before{transform:translateX(0)}
+.btn:active{transform:translateY(3px)}
+.stage:has(input:invalid) .btn{background:#A9AEC4;color:var(--ink);pointer-events:none}
+.stage:has(#t-signup:checked) .go-login,
+.go-signup{display:none}
+.stage:has(#t-signup:checked) .go-signup{display:inline}
+.hint{margin-top:12px;font-size:.85rem;color:var(--muted);text-align:center}
+
+/* ---------- Success state (uses :target, no scripting) ---------- */
+.welcome{display:none;position:relative;text-align:center;padding:14px 0 6px}
+.stage:has(#welcome:target) .form{display:none}
+.welcome:target{display:block}
+.welcome svg{width:104px;height:104px;margin-bottom:14px}
+.welcome circle{fill:var(--bg);transform-origin:center;animation:pop .5s cubic-bezier(.3,1.9,.5,1) backwards}
+.welcome path{fill:none;stroke:var(--ink);stroke-width:8;stroke-linecap:square;stroke-dasharray:60;stroke-dashoffset:60;animation:draw .5s .35s ease-out forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.welcome h2{font-size:1.9rem;font-weight:800;letter-spacing:-.02em}
+.welcome p{margin:6px 0 22px;color:var(--muted)}
+.out{display:inline-block;padding:13px 26px;border-radius:12px;background:var(--sun);font-weight:800;text-decoration:none;transition:background .2s,color .2s}
+.out:hover{background:var(--ink);color:var(--paper)}
+.conf{position:absolute;top:-30px;left:var(--x);width:12px;height:12px;background:var(--c);animation:fall 1.6s var(--d) cubic-bezier(.3,.6,.6,1) both}
+.conf:nth-child(odd){border-radius:50%}
+@keyframes fall{from{transform:translateY(-20px) rotate(0)}to{transform:translateY(340px) rotate(300deg)}}
+.welcome:not(:target) .conf{animation:none}
+
+/* ---------- Small screens + reduced motion ---------- */
+@media (max-width:480px){
+  body{padding-top:120px}
+  .body{padding:22px 20px 24px}
+  h1{font-size:1.7rem}
+  .brand{font-size:1.05rem}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition-duration:.01ms!important}
+  .welcome path{stroke-dashoffset:0}
+}
+</style>
+</head>
+<body>
+
+<div class="shapes" aria-hidden="true">
+  <span class="shape s-sun"></span>
+  <span class="shape s-sq"></span>
+  <span class="shape s-ring"></span>
+  <span class="shape s-tri"></span>
+  <span class="shape s-half"></span>
+  <span class="shape s-dot s-d1"></span>
+  <span class="shape s-dot s-d2"></span>
+  <span class="shape s-dot s-d3"></span>
+  <span class="shape s-plus"></span>
+</div>
+
+<div class="brand"><i></i>Aaditya Patil</div>
+
+<main class="stage">
+  <input class="sr" type="radio" name="tab" id="t-login" checked aria-label="Log in">
+  <input class="sr" type="radio" name="tab" id="t-signup" aria-label="Sign up">
+
+  <div class="pal" aria-hidden="true">
+    <div class="head">
+      <div class="stem"><span class="ball"></span></div>
+      <div class="face">
+        <div class="eye l"><span class="pupil"></span><span class="lid"></span></div>
+        <div class="eye r"><span class="pupil"></span><span class="lid"></span></div>
+      </div>
+    </div>
+  </div>
+
+  <section class="window" aria-label="Sign in window">
+    <div class="bar"><b></b><b></b><b></b><span>Sign in</span></div>
+    <div class="body">
+
+      <div class="form" id="form">
+        <h1><span class="only-login">Welcome back</span><span class="only-signup">Create account</span></h1>
+        <p class="sub"><span class="only-login">Log in to open your dashboard.</span><span class="only-signup">Set up your account in under a minute.</span></p>
+
+        <div class="tabs">
+          <label for="t-login">Log in</label>
+          <label for="t-signup">Sign up</label>
+        </div>
+
+        <div class="extra"><div class="extra-in">
+          <div class="field">
+            <input type="text" id="name" placeholder=" " autocomplete="name">
+            <label for="name">Full name</label>
+          </div>
+        </div></div>
+
+        <div class="field">
+          <input type="email" id="email" placeholder=" " autocomplete="email" required>
+          <label for="email">Email address</label>
+        </div>
+
+        <div class="field">
+          <input type="password" id="pass" placeholder=" " autocomplete="current-password" minlength="6" required>
+          <label for="pass">Password</label>
+        </div>
+
+        <div class="opts">
+          <label class="keep"><input type="checkbox"> Keep me logged in</label>
+          <a href="#form">Forgot password?</a>
+        </div>
+
+        <a class="btn" href="#welcome"><span class="go-login">Log in</span><span class="go-signup">Create account</span></a>
+        <p class="hint">Use a valid email and 6+ characters to unlock the button.</p>
+      </div>
+
+      <div class="welcome" id="welcome">
+        <i class="conf" style="--x:8%;--c:var(--coral);--d:0s"></i>
+        <i class="conf" style="--x:22%;--c:var(--sun);--d:.1s"></i>
+        <i class="conf" style="--x:36%;--c:var(--violet);--d:.05s"></i>
+        <i class="conf" style="--x:50%;--c:var(--bg);--d:.2s"></i>
+        <i class="conf" style="--x:64%;--c:var(--coral);--d:.12s"></i>
+        <i class="conf" style="--x:78%;--c:var(--sun);--d:.02s"></i>
+        <i class="conf" style="--x:90%;--c:var(--violet);--d:.18s"></i>
+        <svg viewBox="0 0 104 104" aria-hidden="true"><circle cx="52" cy="52" r="48"/><path d="M30 54 L46 70 L76 36"/></svg>
+        <h2>You’re in.</h2>
+        <p>Logged in successfully. Your dashboard is ready.</p>
+        <a class="out" href="#form">Log out</a>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+<div class="foot">Pure CSS. Solid colours. No shadows, no gradients.</div>
+
+</body>
+</html>
